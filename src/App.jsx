@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from './supabaseClient';
 import { ShoppingCart, Edit, Trash2, Plus, ArrowLeft, CheckCircle2, TrendingUp, Layers, Clock, DollarSign, X, CreditCard, Sparkles, AlertCircle, Printer, MessageCircle, FileDown, ScanBarcode } from 'lucide-react';
 
+// POS System VentaPOS
 export default function App() {
   const [mode, setMode] = useState('POS');
   const [loading, setLoading] = useState(true);
