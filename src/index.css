@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gray-50 text-gray-900 font-sans antialiased;
+  }
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #ticket-print-area, #ticket-print-area * {
+    visibility: visible;
+  }
+  #ticket-print-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 10px;
+    box-shadow: none !important;
+    border: none !important;
+    background: transparent !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+}
