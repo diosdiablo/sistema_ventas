@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from './supabaseClient';
-import { ShoppingCart, Edit, Trash2, Plus, ArrowLeft, CheckCircle2, TrendingUp, Layers, Clock, DollarSign, X, CreditCard, Sparkles, AlertCircle, Printer, MessageCircle, FileDown, ScanBarcode, Sun, Moon, Wrench, Settings } from 'lucide-react';
+import { ShoppingCart, Edit, Trash2, Plus, ArrowLeft, CheckCircle2, TrendingUp, Layers, Clock, DollarSign, X, CreditCard, Sparkles, AlertCircle, Printer, MessageCircle, FileDown, ScanBarcode, Sun, Moon, Wrench, Settings, Lock, Eye, EyeOff } from 'lucide-react';
 
 const BRAND_NAME = "Multiservicios Thuiaguito";
+const ADMIN_PASSWORD = "thuiaguito2024";
 
 function App() {
   const [mode, setMode] = useState('POS');
@@ -10,6 +11,11 @@ function App() {
   const [products, setProducts] = useState([]);
   const [sales, setSales] = useState([]);
   const [darkMode, setDarkMode] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [tempMode, setTempMode] = useState('POS');
+  const [passwordInput, setPasswordInput] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [authError, setAuthError] = useState('');
   
   const fetchData = async () => {
     setLoading(true);
@@ -50,7 +56,7 @@ function App() {
               <button onClick={() => setMode('POS')} className={`px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 ${mode === 'POS' ? 'bg-white text-violet-600 shadow-lg transform scale-105' : 'text-white/80 hover:text-white hover:bg-white/20'}`}>
                 Nueva Venta
               </button>
-              <button onClick={() => setMode('ADMIN')} className={`px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 ${mode === 'ADMIN' ? 'bg-white text-violet-600 shadow-lg transform scale-105' : 'text-white/80 hover:text-white hover:bg-white/20'}`}>
+              <button onClick={() => { setTempMode('ADMIN'); setShowAuthModal(true); setPasswordInput(''); setAuthError(''); }} className={`px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 ${mode === 'ADMIN' ? 'bg-white text-violet-600 shadow-lg transform scale-105' : 'text-white/80 hover:text-white hover:bg-white/20'}`}>
                 Administrar
               </button>
             </div>
@@ -69,6 +75,69 @@ function App() {
           <AdminView products={products} sales={sales} reloadData={fetchData} loading={loading} darkMode={darkMode} />
         )}
       </main>
+
+      {showAuthModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+          <div className={`w-full max-w-sm rounded-3xl shadow-2xl overflow-hidden p-6 ${darkMode ? 'bg-slate-800 border border-slate-700' : 'bg-white border border-slate-200'}`}>
+            <div className="text-center mb-6">
+              <div className={`inline-flex p-3 rounded-full mb-4 ${darkMode ? 'bg-violet-900' : 'bg-violet-100'}`}>
+                <Lock className={`w-6 h-6 ${darkMode ? 'text-violet-400' : 'text-violet-600'}`} />
+              </div>
+              <h2 className={`text-xl font-black ${darkMode ? 'text-white' : 'text-slate-800'}`}>Acceso Restringido</h2>
+              <p className={`text-sm mt-1 ${darkMode ? 'text-slate-400' : 'text-slate-500'}`}>Ingresa la contraseña para administrar</p>
+            </div>
+            <div className="relative mb-6">
+              <input
+                type={showPassword ? "text" : "password"}
+                value={passwordInput}
+                onChange={(e) => setPasswordInput(e.target.value)}
+                placeholder="Contraseña"
+                className={`w-full px-4 py-3 rounded-xl border-2 outline-none transition-colors font-medium ${darkMode ? 'bg-slate-700 border-slate-600 text-white focus:border-violet-500' : 'bg-white border-slate-200 text-slate-700 focus:border-violet-500'}`}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    if (passwordInput === ADMIN_PASSWORD) {
+                      setMode('ADMIN');
+                      setShowAuthModal(false);
+                    } else {
+                      setAuthError('Contraseña incorrecta');
+                    }
+                  }
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className={`absolute right-3 top-1/2 -translate-y-1/2 p-1 ${darkMode ? 'text-slate-400' : 'text-slate-400'}`}
+              >
+                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              </button>
+            </div>
+            {authError && <p className="text-red-500 text-sm text-center mb-4 font-medium">{authError}</p>}
+            <div className="flex gap-3">
+              <button
+                onClick={() => { setShowAuthModal(false); setPasswordInput(''); setAuthError(''); }}
+                className={`flex-1 py-3 rounded-xl font-bold transition-colors ${darkMode ? 'bg-slate-700 text-slate-300 hover:bg-slate-600' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={() => {
+                  if (passwordInput === ADMIN_PASSWORD) {
+                    setMode('ADMIN');
+                    setShowAuthModal(false);
+                    setPasswordInput('');
+                  } else {
+                    setAuthError('Contraseña incorrecta');
+                  }
+                }}
+                className="flex-1 py-3 rounded-xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 text-white shadow-lg shadow-violet-500/30 hover:from-violet-700 hover:to-purple-700 transition-all"
+              >
+                Acceder
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
