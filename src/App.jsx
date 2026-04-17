@@ -411,7 +411,9 @@ function AdminView({ products, sales, reloadData, loading, darkMode, cachedPassw
           <button onClick={() => setTab('CONFIG')} className={`px-6 py-2.5 rounded-xl font-bold transition-all text-sm ${tab === 'CONFIG' ? (darkMode ? 'bg-slate-700 text-violet-400 shadow-md' : 'bg-white text-violet-600 shadow-md') + ' transform scale-[1.02]' : (darkMode ? 'text-slate-400 hover:bg-slate-700' : 'text-slate-500 hover:bg-white/60 hover:text-slate-800')}`}>Configuración</button>
         </div>
         <div className="flex-1 p-6 overflow-hidden">
-          {tab === 'PRODUCTS' ? <ProductsManager products={products} reloadData={reloadData} darkMode={darkMode}/> : tab === 'SALES' ? <SalesHistory sales={filteredSalesInfo} darkMode={darkMode}/> : tab === 'CONFIG' ? (
+          {tab === 'PRODUCTS' && <ProductsManager products={products} reloadData={reloadData} darkMode={darkMode}/>}
+          {tab === 'SALES' && <SalesHistory sales={filteredSalesInfo} darkMode={darkMode}/>}
+          {tab === 'CONFIG' && (
             <div className="flex flex-col gap-6">
               <h3 className={`text-xl font-black ${darkMode ? 'text-white' : 'text-slate-800'}`}>Configuración</h3>
               
@@ -473,7 +475,7 @@ function AdminView({ products, sales, reloadData, loading, darkMode, cachedPassw
                 </div>
               </div>
             </div>
-          : null}
+          )}
         </div>
       </div>
     </div>
