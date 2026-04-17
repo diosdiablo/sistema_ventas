@@ -4,9 +4,6 @@ import { ShoppingCart, Edit, Trash2, Plus, ArrowLeft, CheckCircle2, TrendingUp, 
 
 const BRAND_NAME = "Multiservicios Thiaguito";
 const DEFAULT_PASSWORD = "thiaguito2024";
-function App() {
-
-const verifyPassword = (input) => input === cachedPassword;
 
 function App() {
   const [mode, setMode] = useState('POS');
@@ -104,7 +101,7 @@ function App() {
                 className={`w-full px-4 py-3 rounded-xl border-2 outline-none transition-colors font-medium ${darkMode ? 'bg-slate-700 border-slate-600 text-white focus:border-violet-500' : 'bg-white border-slate-200 text-slate-700 focus:border-violet-500'}`}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
-                    if (verifyPassword(passwordInput)) {
+                    if (passwordInput === cachedPassword) {
                       setMode('ADMIN');
                       setShowAuthModal(false);
                     } else {
@@ -131,7 +128,7 @@ function App() {
               </button>
               <button
                 onClick={() => {
-                  if (verifyPassword(passwordInput)) {
+                  if (passwordInput === cachedPassword) {
                     setMode('ADMIN');
                     setShowAuthModal(false);
                     setPasswordInput('');
@@ -444,7 +441,7 @@ function AdminView({ products, sales, reloadData, loading, darkMode }) {
                   />
                   <button
                     onClick={async () => {
-                      if (!verifyPassword(configTab.currentPass)) {
+                      if (configTab.currentPass !== cachedPassword) {
                         setConfigTab({ ...configTab, saveMsg: '❌ La contraseña actual es incorrecta' });
                         return;
                       }
