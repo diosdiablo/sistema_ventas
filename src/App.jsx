@@ -3,7 +3,9 @@ import { supabase } from './supabaseClient';
 import { ShoppingCart, Edit, Trash2, Plus, ArrowLeft, CheckCircle2, TrendingUp, Layers, Clock, DollarSign, X, CreditCard, Sparkles, AlertCircle, Printer, MessageCircle, FileDown, ScanBarcode, Sun, Moon, Wrench, Settings, Lock, Eye, EyeOff } from 'lucide-react';
 
 const BRAND_NAME = "Multiservicios Thuiaguito";
-const ADMIN_PASSWORD = "thuiaguito2024";
+const DEFAULT_PASSWORD = "thuiaguito2024";
+const getStoredPassword = () => localStorage.getItem('admin_password') || DEFAULT_PASSWORD;
+const verifyPassword = (input) => input === getStoredPassword();
 
 function App() {
   const [mode, setMode] = useState('POS');
@@ -95,7 +97,7 @@ function App() {
                 className={`w-full px-4 py-3 rounded-xl border-2 outline-none transition-colors font-medium ${darkMode ? 'bg-slate-700 border-slate-600 text-white focus:border-violet-500' : 'bg-white border-slate-200 text-slate-700 focus:border-violet-500'}`}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
-                    if (passwordInput === ADMIN_PASSWORD) {
+                    if (verifyPassword(passwordInput)) {
                       setMode('ADMIN');
                       setShowAuthModal(false);
                     } else {
@@ -122,7 +124,7 @@ function App() {
               </button>
               <button
                 onClick={() => {
-                  if (passwordInput === ADMIN_PASSWORD) {
+                  if (verifyPassword(passwordInput)) {
                     setMode('ADMIN');
                     setShowAuthModal(false);
                     setPasswordInput('');
@@ -352,6 +354,7 @@ function PosView({ products, reloadData, loading, darkMode }) {
 function AdminView({ products, sales, reloadData, loading, darkMode }) {
   const [tab, setTab] = useState('PRODUCTS');
   const [timeFilter, setTimeFilter] = useState('HOY');
+  const [configTab, setConfigTab] = useState({ show: false, currentPass: '', newPass: '', confirmPass: '', saveMsg: '' });
   
   const getFilteredSales = () => {
     const now = new Date();
@@ -401,9 +404,66 @@ function AdminView({ products, sales, reloadData, loading, darkMode }) {
         <div className={`flex gap-3 p-4 border-b ${darkMode ? 'bg-slate-800/50 border-slate-700' : 'bg-slate-100/50 border-slate-100'}`}>
           <button onClick={() => setTab('PRODUCTS')} className={`px-6 py-2.5 rounded-xl font-bold transition-all text-sm ${tab === 'PRODUCTS' ? (darkMode ? 'bg-slate-700 text-violet-400 shadow-md' : 'bg-white text-violet-600 shadow-md') + ' transform scale-[1.02]' : (darkMode ? 'text-slate-400 hover:bg-slate-700' : 'text-slate-500 hover:bg-white/60 hover:text-slate-800')}`}>Gestión de Inventario</button>
           <button onClick={() => setTab('SALES')} className={`px-6 py-2.5 rounded-xl font-bold transition-all text-sm ${tab === 'SALES' ? (darkMode ? 'bg-slate-700 text-violet-400 shadow-md' : 'bg-white text-violet-600 shadow-md') + ' transform scale-[1.02]' : (darkMode ? 'text-slate-400 hover:bg-slate-700' : 'text-slate-500 hover:bg-white/60 hover:text-slate-800')}`}>Historial de Ventas</button>
+          <button onClick={() => setConfigTab({ ...configTab, show: true, currentPass: '', newPass: '', confirmPass: '', saveMsg: '' })} className={`px-6 py-2.5 rounded-xl font-bold transition-all text-sm ${configTab.show ? (darkMode ? 'bg-slate-700 text-violet-400 shadow-md' : 'bg-white text-violet-600 shadow-md') + ' transform scale-[1.02]' : (darkMode ? 'text-slate-400 hover:bg-slate-700' : 'text-slate-500 hover:bg-white/60 hover:text-slate-800')}`}>Configuración</button>
         </div>
         <div className="flex-1 p-6 overflow-hidden">
-          {tab === 'PRODUCTS' ? <ProductsManager products={products} reloadData={reloadData} darkMode={darkMode}/> : <SalesHistory sales={filteredSalesInfo} darkMode={darkMode}/>}
+          {tab === 'PRODUCTS' ? <ProductsManager products={products} reloadData={reloadData} darkMode={darkMode}/> : tab === 'SALES' ? <SalesHistory sales={filteredSalesInfo} darkMode={darkMode}/> : (
+            <div className="flex flex-col gap-6">
+              <h3 className={`text-xl font-black ${darkMode ? 'text-white' : 'text-slate-800'}`}>Configuración</h3>
+              
+              <div className={`p-6 rounded-3xl border ${darkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'}`}>
+                <h4 className={`font-bold mb-4 ${darkMode ? 'text-white' : 'text-slate-800'}`}>Cambiar Contraseña de Administrador</h4>
+                <div className="flex flex-col gap-4">
+                  <input
+                    type="password"
+                    placeholder="Contraseña actual"
+                    value={configTab.currentPass}
+                    onChange={(e) => setConfigTab({ ...configTab, currentPass: e.target.value, saveMsg: '' })}
+                    className={`w-full px-4 py-3 rounded-xl border-2 outline-none font-medium ${darkMode ? 'bg-slate-700 border-slate-600 text-white focus:border-violet-500' : 'bg-white border-slate-200 text-slate-700 focus:border-violet-500'}`}
+                  />
+                  <input
+                    type="password"
+                    placeholder="Nueva contraseña"
+                    value={configTab.newPass}
+                    onChange={(e) => setConfigTab({ ...configTab, newPass: e.target.value, saveMsg: '' })}
+                    className={`w-full px-4 py-3 rounded-xl border-2 outline-none font-medium ${darkMode ? 'bg-slate-700 border-slate-600 text-white focus:border-violet-500' : 'bg-white border-slate-200 text-slate-700 focus:border-violet-500'}`}
+                  />
+                  <input
+                    type="password"
+                    placeholder="Confirmar nueva contraseña"
+                    value={configTab.confirmPass}
+                    onChange={(e) => setConfigTab({ ...configTab, confirmPass: e.target.value, saveMsg: '' })}
+                    className={`w-full px-4 py-3 rounded-xl border-2 outline-none font-medium ${darkMode ? 'bg-slate-700 border-slate-600 text-white focus:border-violet-500' : 'bg-white border-slate-200 text-slate-700 focus:border-violet-500'}`}
+                  />
+                  <button
+                    onClick={async () => {
+                      if (!verifyPassword(configTab.currentPass)) {
+                        setConfigTab({ ...configTab, saveMsg: '❌ La contraseña actual es incorrecta' });
+                        return;
+                      }
+                      if (configTab.newPass.length < 4) {
+                        setConfigTab({ ...configTab, saveMsg: '❌ La nueva contraseña debe tener al menos 4 caracteres' });
+                        return;
+                      }
+                      if (configTab.newPass !== configTab.confirmPass) {
+                        setConfigTab({ ...configTab, saveMsg: '❌ Las contraseñas no coinciden' });
+                        return;
+                      }
+                      // Save to localStorage for simplicity (or could use Supabase)
+                      localStorage.setItem('admin_password', configTab.newPass);
+                      setConfigTab({ ...configTab, currentPass: '', newPass: '', confirmPass: '', saveMsg: '✅ Contraseña actualizada correctamente' });
+                    }}
+                    className="bg-gradient-to-r from-violet-600 to-purple-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-violet-500/30 hover:from-violet-700 hover:to-purple-700 transition-all"
+                  >
+                    Guardar Nueva Contraseña
+                  </button>
+                  {configTab.saveMsg && (
+                    <p className={`text-center font-bold ${configTab.saveMsg.includes('✅') ? 'text-emerald-500' : 'text-red-500'}`}>{configTab.saveMsg}</p>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
