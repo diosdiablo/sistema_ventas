@@ -454,7 +454,12 @@ function AdminView({ products, sales, reloadData, loading, darkMode, cachedPassw
                         return;
                       }
                       // Save to Supabase
-                      await supabase.from('config').upsert({ key: 'admin_password', value: configTab.newPass });
+                      const { error } = await supabase.from('config').upsert({ key: 'admin_password', value: configTab.newPass }, { onConflict: 'key' });
+                      if (error) {
+                        console.error('Error saving:', error);
+                        setConfigTab({ ...configTab, saveMsg: '❌ Error al guardar: ' + error.message });
+                        return;
+                      }
                       onPasswordChange(configTab.newPass);
                       setConfigTab({ ...configTab, currentPass: '', newPass: '', confirmPass: '', saveMsg: '✅ Contraseña actualizada correctamente' });
                     }}
