@@ -29,7 +29,7 @@ CREATE TABLE public.config (
 );
 
 -- Insertar config inicial
-INSERT INTO public.config (key, value) VALUES ('admin_password', 'thuiaguito2024');
+INSERT INTO public.config (key, value) VALUES ('admin_password', 'thiaguito2024');
 
 -- Deshabilitar RLS para desarrollo inicial rápido
 ALTER TABLE public.products DISABLE ROW LEVEL SECURITY;

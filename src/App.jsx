@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from './supabaseClient';
 import { ShoppingCart, Edit, Trash2, Plus, ArrowLeft, CheckCircle2, TrendingUp, Layers, Clock, DollarSign, X, CreditCard, Sparkles, AlertCircle, Printer, MessageCircle, FileDown, ScanBarcode, Sun, Moon, Wrench, Settings, Lock, Eye, EyeOff } from 'lucide-react';
 
-const BRAND_NAME = "Multiservicios Thuiaguito";
-const DEFAULT_PASSWORD = "thuiaguito2024";
+const BRAND_NAME = "Multiservicios Thiaguito";
+const DEFAULT_PASSWORD = "thiaguito2024";
+function App() {
 
 const verifyPassword = (input) => input === cachedPassword;
 
