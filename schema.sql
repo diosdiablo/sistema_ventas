@@ -22,6 +22,16 @@ CREATE TABLE public.sales (
     fecha TIMESTAMPTZ DEFAULT now()
 );
 
+-- 3. Tabla de Configuración
+CREATE TABLE public.config (
+    key TEXT PRIMARY KEY,
+    value TEXT NOT NULL
+);
+
+-- Insertar config inicial
+INSERT INTO public.config (key, value) VALUES ('admin_password', 'thuiaguito2024');
+
 -- Deshabilitar RLS para desarrollo inicial rápido
 ALTER TABLE public.products DISABLE ROW LEVEL SECURITY;
 ALTER TABLE public.sales DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.config DISABLE ROW LEVEL SECURITY;

@@ -4,8 +4,8 @@ import { ShoppingCart, Edit, Trash2, Plus, ArrowLeft, CheckCircle2, TrendingUp, 
 
 const BRAND_NAME = "Multiservicios Thuiaguito";
 const DEFAULT_PASSWORD = "thuiaguito2024";
-const getStoredPassword = () => localStorage.getItem('admin_password') || DEFAULT_PASSWORD;
-const verifyPassword = (input) => input === getStoredPassword();
+
+const verifyPassword = (input) => input === cachedPassword;
 
 function App() {
   const [mode, setMode] = useState('POS');
@@ -18,6 +18,7 @@ function App() {
   const [passwordInput, setPasswordInput] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [authError, setAuthError] = useState('');
+  const [cachedPassword, setCachedPassword] = useState(DEFAULT_PASSWORD);
   
   const fetchData = async () => {
     setLoading(true);
@@ -25,6 +26,11 @@ function App() {
     let { data: salesData } = await supabase.from('sales').select('*').order('fecha', { ascending: false });
     if (productsData) setProducts(productsData);
     if (salesData) setSales(salesData);
+    
+    // Cargar contraseña
+    const { data: configData } = await supabase.from('config').select('value').eq('key', 'admin_password').single();
+    if (configData) setCachedPassword(configData.value);
+    
     setLoading(false);
   };
 
@@ -449,9 +455,11 @@ function AdminView({ products, sales, reloadData, loading, darkMode }) {
                         setConfigTab({ ...configTab, saveMsg: '❌ Las contraseñas no coinciden' });
                         return;
                       }
-                      // Save to localStorage for simplicity (or could use Supabase)
-                      localStorage.setItem('admin_password', configTab.newPass);
+                      // Save to Supabase
+                      await supabase.from('config').upsert({ key: 'admin_password', value: configTab.newPass });
+                      setCachedPassword(configTab.newPass);
                       setConfigTab({ ...configTab, currentPass: '', newPass: '', confirmPass: '', saveMsg: '✅ Contraseña actualizada correctamente' });
+                      reloadData();
                     }}
                     className="bg-gradient-to-r from-violet-600 to-purple-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-violet-500/30 hover:from-violet-700 hover:to-purple-700 transition-all"
                   >
