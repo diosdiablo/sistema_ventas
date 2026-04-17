@@ -78,7 +78,7 @@ function App() {
         {mode === 'POS' ? (
           <PosView products={products} reloadData={fetchData} loading={loading} darkMode={darkMode} />
         ) : (
-          <AdminView products={products} sales={sales} reloadData={fetchData} loading={loading} darkMode={darkMode} />
+          <AdminView products={products} sales={sales} reloadData={fetchData} loading={loading} darkMode={darkMode} cachedPassword={cachedPassword} onPasswordChange={(newPass) => { setCachedPassword(newPass); fetchData(); }} />
         )}
       </main>
 
@@ -355,7 +355,7 @@ function PosView({ products, reloadData, loading, darkMode }) {
   );
 }
 
-function AdminView({ products, sales, reloadData, loading, darkMode }) {
+function AdminView({ products, sales, reloadData, loading, darkMode, cachedPassword, onPasswordChange }) {
   const [tab, setTab] = useState('PRODUCTS');
   const [timeFilter, setTimeFilter] = useState('HOY');
   const [configTab, setConfigTab] = useState({ show: false, currentPass: '', newPass: '', confirmPass: '', saveMsg: '' });
@@ -455,9 +455,8 @@ function AdminView({ products, sales, reloadData, loading, darkMode }) {
                       }
                       // Save to Supabase
                       await supabase.from('config').upsert({ key: 'admin_password', value: configTab.newPass });
-                      setCachedPassword(configTab.newPass);
+                      onPasswordChange(configTab.newPass);
                       setConfigTab({ ...configTab, currentPass: '', newPass: '', confirmPass: '', saveMsg: '✅ Contraseña actualizada correctamente' });
-                      reloadData();
                     }}
                     className="bg-gradient-to-r from-violet-600 to-purple-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-violet-500/30 hover:from-violet-700 hover:to-purple-700 transition-all"
                   >
