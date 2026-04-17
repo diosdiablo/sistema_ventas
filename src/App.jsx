@@ -473,7 +473,7 @@ function AdminView({ products, sales, reloadData, loading, darkMode, cachedPassw
                 </div>
               </div>
             </div>
-          )}
+          : null}
         </div>
       </div>
     </div>
