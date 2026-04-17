@@ -58,7 +58,7 @@ function App() {
         </div>
       </header>
 
-      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 overflow-hidden flex flex-col pt-6 relative" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1604719312566-8912e9227c6a?w=1920&q=80)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
+      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 overflow-hidden flex flex-col pt-6 relative" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1534723452862-4c874018d66d?w=1920&q=80)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
         <div className="absolute inset-0 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm -z-10"></div>
         <div className="no-print absolute top-0 left-1/4 w-96 h-96 bg-violet-500/10 dark:bg-violet-500/5 rounded-full blur-3xl -z-10 pointer-events-none"></div>
         <div className="no-print absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-500/10 dark:bg-indigo-500/5 rounded-full blur-3xl -z-10 pointer-events-none"></div>
