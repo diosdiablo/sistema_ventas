@@ -34,7 +34,7 @@ function App() {
 
   useEffect(() => {
     fetchData();
-  }, [mode]);
+  }, []);
 
   useEffect(() => {
     if (darkMode) {
@@ -45,8 +45,8 @@ function App() {
   }, [darkMode]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-900 font-sans text-slate-800 dark:text-slate-100 selection:bg-violet-200 dark:selection:bg-violet-700 transition-colors duration-300">
-      <header className="no-print bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 dark:from-indigo-800 dark:via-violet-800 dark:to-purple-800 text-white shadow-xl sticky top-0 z-20">
+    <div className={`min-h-screen flex flex-col font-sans selection:bg-violet-200 ${darkMode ? 'bg-slate-900 text-slate-100' : 'bg-slate-50 text-slate-800'} transition-colors duration-300`}>
+      <header className="no-print bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 text-white shadow-xl sticky top-0 z-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="p-2.5 bg-white/20 rounded-2xl backdrop-blur-md shadow-inner border border-white/10">
@@ -70,11 +70,7 @@ function App() {
         </div>
       </header>
 
-      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 overflow-hidden flex flex-col pt-6 relative" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1534723452862-4c874018d66d?w=1920&q=80)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
-        <div className="absolute inset-0 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm -z-10"></div>
-        <div className="no-print absolute top-0 left-1/4 w-96 h-96 bg-violet-500/10 dark:bg-violet-500/5 rounded-full blur-3xl -z-10 pointer-events-none"></div>
-        <div className="no-print absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-500/10 dark:bg-indigo-500/5 rounded-full blur-3xl -z-10 pointer-events-none"></div>
-
+      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 overflow-hidden flex flex-col pt-6 relative">
         {mode === 'POS' ? (
           <PosView products={products} reloadData={fetchData} loading={loading} darkMode={darkMode} />
         ) : (
